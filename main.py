@@ -1,59 +1,79 @@
-def create_car():
-    car = {
-        'vin': input('Введите VIN: ').strip(),
-        'brand': input('Введите марку: ').strip(),
-        'model': input('Введите модель: ').strip(),
-        'status': input('Введите статус: ').strip(),
-        'latitude': float(input('Введите широту: ')),
-        'longitude': float(input('Введите долготу: '))
+#создаем пустой словарь автопарк
+fleet = {}
+
+# функцию добавления автомобиля в автопарк
+def create_car(fleet):
+    vin = input('Введите VIN-номер: ').strip()
+    if vin in fleet:
+        print(f"Ошибка: Автомобиль с VIN {vin} уже существует!")
+        return
+    brand = input('Введите марку:  ').strip()
+    model = input('Введите модель: ').strip()  
+    status = input('Введите статус: ').strip()
+    latitude = float(input('Введите широту: '))
+    longitude = float(input('Введите долготу: '))
+
+    fleet[vin] = {
+        'brand': brand, 'model': model,
+        'status': status, 'latitude': latitude, 'longitude': longitude
     }
+    print('Автомобиль добавлен!')
 
-    return car
+def show_car(car_data):
+    print(f"Автомобиль: {car_data['brand']}, {car_data['model']}")
+    print(f"Статус: {car_data['status']}")
+    print(f"Координаты: {car_data['latitude']}, {car_data['longitude']}")
 
-
-def show_car(car):
-    print(f"\nАвтомобиль: {car['brand']} {car['model']}")
-    print(f"VIN: {car['vin']}")
-    print(f"Статус: {car['status']}")
-    print(f"Координаты: {car['latitude']}, {car['longitude']}")
-
-
-def update_location(car, latitude, longitude):
-    car['latitude'] = latitude
-    car['longitude'] = longitude
-
-
-def update_status(car, status):
-    car['status'] = status
-
-
-car = create_car()
-
+def find_car(fleet):
+    vin = input('Введите VIN-номер для поиска машины: ').strip()
+    if vin in fleet:
+        print('Машина найдена: ')
+        show_car(fleet[vin])
+    else:
+         print('Машина с таким VIN-номером не найдена. Введите корректный VIN-номер')
+def update_car(fleet):
+    vin = input('Введите VIN-номер для поиска машины: ').strip()
+    if vin in fleet:
+        print('Машина с таким VIN-номером найдена!')
+        new_status = input('Введите новый статус: ').strip()
+        fleet[vin]['status'] = new_status
+        print('Статус успешно обновлен')
+    else:
+        print('Машина с таким VIN-номером не найдена. Введите корректный VIN-номер')
+def delete_car(fleet):
+    vin = input('Введите VIN-номер для удаления: ').strip()
+    if vin in fleet:
+        print('Машина с таким VIN-номером найдена!')
+        del fleet[vin]
+        print('Машина с таким VIN-номером успешно удалена из автопарка!')
+    else:
+        print('Машина с таким VIN-номером не найдена. Введите корректный VIN-номер')
 while True:
-    print('\n1 — данные автомобиля')
-    print('2 — обновить координаты')
-    print('3 — изменить статус')
-    print('4 — выйти')
+    print("\n=== СИСТЕМА УПРАВЛЕНИЯ АВТОПАРКОМ ===")
+    print("1 — Добавить автомобиль")
+    print("2 — Найти и показать автомобиль")
+    print("3 — Изменить статус автомобиля")
+    print("4 — Списать (удалить) автомобиль")
+    print("5 — Выйти из программы")
 
-    choice = input('Выберите действие: ')
+    choice = input('Выберите действие: ').strip()
 
     if choice == '1':
-        show_car(car)
+        create_car(fleet)
 
     elif choice == '2':
-        latitude = float(input('Новая широта: '))
-        longitude = float(input('Новая долгота: '))
-        update_location(car, latitude, longitude)
-        print('Координаты обновлены')
-
+        find_car(fleet)
+        
     elif choice == '3':
-        status = input('Новый статус: ')
-        update_status(car, status)
-        print('Статус обновлён')
-
+        update_car(fleet)
+        
     elif choice == '4':
-        print('Программа завершена')
+        delete_car(fleet)
+        
+    elif choice =='5':
+        print('Завершение работы программы...')
         break
 
     else:
-        print('Неизвестная команда')
+        print('Неверный ввод, введите пункт от 1 до 5')
+    
