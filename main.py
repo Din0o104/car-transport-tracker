@@ -1,5 +1,23 @@
+import json
+
+DATA_FILE = "fleet.json"
+
+def save_fleet(fleet, filename = DATA_FILE):
+    with open(filename, "w", encoding="utf-8") as file:
+        json.dump(fleet, file, ensure_ascii=False, indent=4)
+
+def load_fleet(filename=DATA_FILE):
+    try:
+        with open(filename, "r", encoding="utf-8") as file:
+            return json.load(file)
+    except FileNotFoundError:
+
+        return {}
+
 #создаем пустой словарь автопарк
-fleet = {}
+fleet = load_fleet()
+
+# обработка ошибок защита от падения 
 
 def get_float_input(prompt):
     while True:
@@ -24,12 +42,17 @@ def create_car(fleet):
         'brand': brand, 'model': model,
         'status': status, 'latitude': latitude, 'longitude': longitude
     }
+    save_fleet(fleet)
     print('Автомобиль добавлен!')
+
+# функция для вывода авто
 
 def show_car(car_data):
     print(f"Автомобиль: {car_data['brand']}, {car_data['model']}")
     print(f"Статус: {car_data['status']}")
     print(f"Координаты: {car_data['latitude']}, {car_data['longitude']}")
+
+# функция для счета машин в автопарке
 
 def list_cars(fleet, status_filter = None):
     if not fleet:
@@ -47,6 +70,8 @@ def list_cars(fleet, status_filter = None):
     if found_count == 0:
         print(f"Машин со статусом '{status_filter}' не найдено.")
 
+# функция поиска авто
+
 def find_car(fleet):
     vin = input('Введите VIN-номер для поиска машины: ').strip()
     if vin in fleet:
@@ -60,17 +85,25 @@ def update_car(fleet):
         print('Машина с таким VIN-номером найдена!')
         new_status = input('Введите новый статус: ').strip()
         fleet[vin]['status'] = new_status
+        save_fleet(fleet)
         print('Статус успешно обновлен')
     else:
         print('Машина с таким VIN-номером не найдена. Введите корректный VIN-номер')
+
+# функция которая удаляет авто из автопарка 
+
 def delete_car(fleet):
     vin = input('Введите VIN-номер для удаления: ').strip()
     if vin in fleet:
         print('Машина с таким VIN-номером найдена!')
         del fleet[vin]
+        save_fleet(fleet)
         print('Машина с таким VIN-номером успешно удалена из автопарка!')
     else:
         print('Машина с таким VIN-номером не найдена. Введите корректный VIN-номер')
+
+# терминал
+
 while True:
     print("\n=== СИСТЕМА УПРАВЛЕНИЯ АВТОПАРКОМ ===")
     print("1 - Добавить автомобиль")
