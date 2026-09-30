@@ -24,6 +24,22 @@ def show_car(car_data):
     print(f"Статус: {car_data['status']}")
     print(f"Координаты: {car_data['latitude']}, {car_data['longitude']}")
 
+def list_cars(fleet, status_filter = None):
+    if not fleet:
+        print('Автопарк пуст.')
+        return
+
+    found_count = 0
+    print("\n--- СПИСОК АВТОМОБИЛЕЙ ---")
+
+    for vin, car_data in fleet.items():
+        if status_filter is None or car_data['status'].lower() == status_filter.lower():
+            print(f"\nVIN: {vin}")
+            show_car(car_data)
+            found_count += 1
+    if found_count == 0:
+        print(f"Машин со статусом '{status_filter}' не найдено.")
+
 def find_car(fleet):
     vin = input('Введите VIN-номер для поиска машины: ').strip()
     if vin in fleet:
@@ -50,11 +66,12 @@ def delete_car(fleet):
         print('Машина с таким VIN-номером не найдена. Введите корректный VIN-номер')
 while True:
     print("\n=== СИСТЕМА УПРАВЛЕНИЯ АВТОПАРКОМ ===")
-    print("1 — Добавить автомобиль")
-    print("2 — Найти и показать автомобиль")
-    print("3 — Изменить статус автомобиля")
-    print("4 — Списать (удалить) автомобиль")
-    print("5 — Выйти из программы")
+    print("1 - Добавить автомобиль")
+    print("2 - Найти и показать автомобиль")
+    print("3 - Изменить статус автомобиля")
+    print("4 - Списать (удалить) автомобиль")
+    print("5 - Показать автомобили(все / по фильтру)")
+    print("6 — Выйти из программы")
 
     choice = input('Выберите действие: ').strip()
 
@@ -69,11 +86,21 @@ while True:
         
     elif choice == '4':
         delete_car(fleet)
-        
-    elif choice =='5':
+
+    elif choice == '5':
+        mode = input("1 - Показать все машины, 2 - Фильтр по статусу: ").strip()
+        if mode == '1':
+            list_cars(fleet)
+        elif mode == '2':
+            desired_status = input("Введите статус (например, free / in_use): ").strip()
+            list_cars(fleet, status_filter=desired_status)
+        else:
+            print("Неверный режим просмотра.")
+
+    elif choice =='6':
         print('Завершение работы программы...')
         break
 
     else:
-        print('Неверный ввод, введите пункт от 1 до 5')
+        print('Неверный ввод, введите пункт от 1 до 6')
     
