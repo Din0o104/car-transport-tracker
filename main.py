@@ -1,6 +1,13 @@
 #создаем пустой словарь автопарк
 fleet = {}
 
+def get_float_input(prompt):
+    while True:
+        try:
+            return float(input(prompt))
+        except ValueError:
+            print("Ошибка: введите корректное число (напривер 52.25)")
+
 # функцию добавления автомобиля в автопарк
 def create_car(fleet):
     vin = input('Введите VIN-номер: ').strip()
@@ -10,8 +17,8 @@ def create_car(fleet):
     brand = input('Введите марку:  ').strip()
     model = input('Введите модель: ').strip()  
     status = input('Введите статус: ').strip()
-    latitude = float(input('Введите широту: '))
-    longitude = float(input('Введите долготу: '))
+    latitude = get_float_input('Введите широту: ')
+    longitude = get_float_input('Введите долготу: ')
 
     fleet[vin] = {
         'brand': brand, 'model': model,
