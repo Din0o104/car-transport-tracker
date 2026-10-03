@@ -1,8 +1,8 @@
+from models import Car
 import services
 
 
-def get_float_input(prompt):
-    """Безопасный ввод чисел с плавающей точкой."""
+def get_float_input(prompt: str) -> float:
     while True:
         try:
             return float(input(prompt))
@@ -10,12 +10,11 @@ def get_float_input(prompt):
             print("Ошибка: введите корректное число (например, 55.75).")
 
 
-def print_car(vin, car):
-    """Форматированный вывод карточки одного автомобиля."""
-    print(f"\nVIN: {vin}")
-    print(f"Автомобиль: {car['brand']} {car['model']}")
-    print(f"Статус: {car['status']}")
-    print(f"Координаты: {car['latitude']}, {car['longitude']}")
+def print_car(car: Car):
+    print(f"\nVIN: {car.vin}")
+    print(f"Автомобиль: {car.brand} {car.model}")
+    print(f"Статус: {car.status}")
+    print(f"Координаты: {car.latitude}, {car.longitude}")
 
 
 def handle_add_car():
@@ -38,7 +37,7 @@ def handle_find_car():
     vin = input("Введите VIN для поиска: ").strip()
     car = services.get_car(vin)
     if car:
-        print_car(vin, car)
+        print_car(car)
     else:
         print(f"Автомобиль с VIN '{vin}' не найден.")
 
@@ -59,8 +58,8 @@ def handle_list_cars():
         return
 
     print(f"\nНайдено автомобилей: {len(cars)}")
-    for vin, car_data in cars.items():
-        print_car(vin, car_data)
+    for car in cars:
+        print_car(car)
 
 
 def handle_update_status():
@@ -85,7 +84,6 @@ def handle_delete_car():
 
 
 def run_cli():
-    """Главный цикл консольного интерфейса."""
     while True:
         print("\n=== СИСТЕМА УПРАВЛЕНИЯ АВТОПАРКОМ ===")
         print("1 — Добавить автомобиль")
