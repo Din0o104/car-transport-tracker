@@ -219,3 +219,10 @@ __marimo__/
 
 #local database / user data
 fleet.json
+
+# База данных SQLite
+*.db
+fleet.db
+
+__pycache__/
+.pytest_cache/
